@@ -14,6 +14,7 @@ void Process::InscreaseWaitTime(float v)  { waitTime += v; }
 
 // Getters
 float Process::GetEnteringTime() const { return enteringTime; }
+float Process::GetDurationTime() const { return durationTime; }
 float Process::GetReturnTime() const { return returnTime; }
 float Process::GetAnswerTime() const { return answerTime; }
 float Process::GetWaitTime() const { return waitTime; }

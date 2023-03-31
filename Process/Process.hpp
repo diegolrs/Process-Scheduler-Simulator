@@ -4,6 +4,7 @@ class Process
 {
     private:
         float enteringTime;
+        float durationTime;
         float returnTime;
         float answerTime;
         float waitTime;
@@ -16,7 +17,8 @@ class Process
         void InscreaseWaitTime(float v);
 
         // Getters
-        float GetEnteringTime() const ;
+        float GetEnteringTime() const;
+        float GetDurationTime() const;
         float GetReturnTime() const;
         float GetAnswerTime() const;
         float GetWaitTime() const;
