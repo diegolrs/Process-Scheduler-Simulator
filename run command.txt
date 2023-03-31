@@ -1,1 +1,1 @@
-g++ *.cpp Schedulers\*.cpp -o program
+g++ *.cpp Process\*.cpp Schedulers\*.cpp -o program
