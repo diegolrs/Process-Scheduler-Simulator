@@ -6,6 +6,11 @@ TimeStamp_Observer::TimeStamp_Observer(TimeStamp_Subject* sender) : IObserver<fl
     SubscribeToEvent();
 }
 
+TimeStamp_Observer::~TimeStamp_Observer()
+{
+    UnsubscribeFromEvent();
+}
+
 void TimeStamp_Observer::Update(float message)
 {
     std::cout << "[RECEBIDO]: " << message << std::endl;

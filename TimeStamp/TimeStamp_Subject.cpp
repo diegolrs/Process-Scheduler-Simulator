@@ -29,7 +29,6 @@ void TimeStamp_Subject::NotifyObservers()
 
     for(int i=0; i < observers.size(); i++)
     {
-        if(observers[i] != NULL)
-            observers[i]->Update(msg);
+        observers[i]->Update(msg);
     }
 }
