@@ -1,21 +1,22 @@
-class TimeStamp
+#include "TimeStamp.hpp"
+
+TimeStamp::TimeStamp()
 {
-    public:
-        TimeStamp()
-        {
-            time = 0;
-        }   
-        
-        void IncreaseTime(float delta)
-        {
-            time += delta;
-        }
+    time = 0;
+}   
 
-        float GetTime()
-        {
-            return time;
-        }
+void TimeStamp::IncreaseTime(float delta)
+{
+    time += delta;
+    this->NotifyObservers();
+}
 
-    private:
-        float time;
-};
+float TimeStamp::GetTime()
+{
+    return time;
+}
+
+float TimeStamp::GetMessage()
+{
+    return time;
+}
