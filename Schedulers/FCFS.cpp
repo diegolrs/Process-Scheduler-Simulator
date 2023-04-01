@@ -1,62 +1,64 @@
-#include "../Queue/Queue.hpp"
-#include "../Process/Process.hpp"
+#include "FCFS.hpp"
+#include <iostream>
 
-// First-Come, First-Served
-class FCFS
+FCFS::FCFS(TimeStamp* sender, Queue<Process*>* processQueue) : TimeStamp_Observer(sender)
 {
-    public:
-        FCFS(Queue<Process*>* processQueue)
-        {
-            this->toCreateQueue = processQueue;
-        }
+    this->allProcessQueue = processQueue;
+    this->toCreateQueue = processQueue;
+    this->readyQueue = new Queue<Process*>();
+    this->currentProcessing = nullptr;
+}
 
-        void OnTimeStamp(float delta)
-        {
-            ProcessReadyQueue(delta);
-            ProcessWaitingQueue(delta);
-        }
-    private:
-        Queue<Process*>* toCreateQueue;
-        Queue<Process*>* readyQueue;
-        Process* currentProcessing;
+void FCFS::Update(float delta)
+{
+    ProcessToCreateQueue(delta);
+    ProcessCurrentEnabled(delta);
+    ProcessReadyQueue(delta);
 
-        // TODO: No lugar de delta, por tempo passado atual
-        void ProcessToCreateQueue(float delta)
-        {
-            int length = toCreateQueue->Length();
+    currentProcessing = GetNextToBeProcessed();
+}
 
-            for(int i = 0; i < length; i++)
-            {
-                Process* p = toCreateQueue->Dequeue();
+void FCFS::ProcessToCreateQueue(float delta)
+{
+    int length = toCreateQueue->Length();
 
-                if(p->GetEnteringTime() >= delta)
-                    readyQueue->Enqueue(p);
-                else
-                    toCreateQueue->Enqueue(p);
-            }
-        }
+    for(int i = 0; i < length; i++)
+    {
+        Process* p = toCreateQueue->Dequeue();
 
-        void ProcessReadyQueue(float delta)
-        {
-            if(currentProcessing == nullptr)
-                return;
+        if(p->GetEnteringTime() < sender->GetTotalTime())
+            readyQueue->Enqueue(p);
+        else
+            toCreateQueue->Enqueue(p);
+    }
+}
 
-            currentProcessing->InscreaseInCPUTime(delta);
+void FCFS::ProcessCurrentEnabled(float delta)
+{
+    if(currentProcessing == nullptr)
+        currentProcessing = readyQueue->Dequeue();
 
-            if(currentProcessing->IsFinished())
-                currentProcessing = readyQueue->Dequeue();
-        }
+    if(currentProcessing != nullptr)
+        currentProcessing->InscreaseInCPUTime(delta);
+}
 
-        void ProcessWaitingQueue(float delta)
-        {
-            int length = readyQueue->Length();
+void FCFS::ProcessReadyQueue(float delta)
+{
+    for(int i = 0; i < readyQueue->Length(); i++)
+    {
+        Process* p = readyQueue->Dequeue();
+        p->InscreaseWaitTime(delta);
+        readyQueue->Enqueue(p);
+    }
+}
 
-            // iterar fila e aplicar tempo
-            for(int i = 0; i < length; i++)
-            {
-                Process* p = readyQueue->Dequeue();
-                p->InscreaseWaitTime(delta);
-                readyQueue->Enqueue(p);
-            }
-        }
-};
+Process* FCFS::GetNextToBeProcessed()
+{
+    // if should switch current process   
+    if(currentProcessing && currentProcessing->IsFinished())
+    {
+        return readyQueue->IsEmpty() ? nullptr : readyQueue->Dequeue();
+    }
+        
+    return currentProcessing;
+}

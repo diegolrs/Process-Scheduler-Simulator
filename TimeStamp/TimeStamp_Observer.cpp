@@ -1,8 +1,9 @@
 #include "TimeStamp_Observer.hpp"
 #include <iostream>
 
-TimeStamp_Observer::TimeStamp_Observer(TimeStamp_Subject* sender) : IObserver<float>(sender)
+TimeStamp_Observer::TimeStamp_Observer(TimeStamp* sender)
 {
+    this->sender = sender;
     SubscribeToEvent();
 }
 

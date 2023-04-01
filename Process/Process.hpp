@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 
 class Process
 {
@@ -15,6 +16,7 @@ class Process
         Process(float enteringTime=0, float durationTime=0);
 
         bool IsFinished() const;
+        std::string ToString();
 
         void InscreaseReturnTime(float v);
         void InscreaseAnswerTime(float v);

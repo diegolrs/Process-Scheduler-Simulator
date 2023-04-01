@@ -7,14 +7,7 @@ template <typename T>
 class IObserver 
 {
     public:
-        IObserver(ISubject<T>* sender)
-        {
-            this->sender = sender;
-        }
-
         virtual void Update(T message) = 0;
-    protected:
-        ISubject<T>* sender;
 };
 
 template <typename T>

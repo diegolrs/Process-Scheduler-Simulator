@@ -5,19 +5,40 @@
 #include "Process/Process.hpp"
 #include "TimeStamp/TimeStamp.hpp"
 #include "TimeStamp/TimeStamp_Observer.hpp"
+#include "Schedulers/FCFS.hpp"
 
 using namespace std;
 
-vector<Process> getProcess()
+vector<Process*> getProcess()
 {
-    vector<Process> process;
+    vector<Process*> process;
 
-    process.push_back(Process(0, 20));
-    process.push_back(Process(0, 10));
-    process.push_back(Process(4, 6));
-    process.push_back(Process(4, 8));
+    process.push_back(new Process(0, 20));
+    process.push_back(new Process(0, 10));
+    process.push_back(new Process(4, 6));
+    process.push_back(new Process(4, 8));
 
     return process;
+}
+
+void testFCFS()
+{
+    vector<Process*> process = getProcess();
+    Queue<Process*>* queue = new Queue<Process*>();
+
+    for(int i = 0; i < process.size(); i++)
+    {
+        queue->Enqueue(process[i]);
+    }
+
+    TimeStamp* timer = new TimeStamp();
+    FCFS* fcfs = new FCFS(timer, queue);
+
+    for(int i = 0; i <= 50; i++)
+        timer->IncreaseTime(1);
+
+    for(int i = 0; i < process.size(); i++)
+        cout << process[i]->ToString() << endl;
 }
 
 void testQueueIteration()
@@ -68,6 +89,7 @@ void testObservers()
 
 int main()
 {
-    testObservers();
+    testFCFS();
+    //testObservers();
     return 0;
 }
