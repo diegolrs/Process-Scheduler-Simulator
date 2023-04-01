@@ -8,6 +8,7 @@ class Queue
 {
     public:
         Queue();
+        Queue<T>* Copy();
 
         bool IsEmpty();
         int Length(); 
@@ -29,6 +30,21 @@ Queue<T>::Queue()
 {
     head = NULL_NODE;
     nElements = 0;
+}
+
+template <typename T>
+Queue<T>* Queue<T>::Copy()
+{
+    Queue<T>* copy = new Queue<T>();
+
+    for(int i = 0; i < Length(); i++)
+    {
+        T item = Dequeue();
+        copy->Enqueue(item);
+        Enqueue(item);
+    }
+
+    return copy;
 }
 
 template <typename T>
