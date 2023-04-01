@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <vector>
 #include "Queue/Queue.hpp"
 #include "Process/Process.hpp"
 #include "TimeStamp/TimeStamp.hpp"
@@ -7,7 +8,19 @@
 
 using namespace std;
 
-int main()
+vector<Process> getProcess()
+{
+    vector<Process> process;
+
+    process.push_back(Process(0, 20));
+    process.push_back(Process(0, 10));
+    process.push_back(Process(4, 6));
+    process.push_back(Process(4, 8));
+
+    return process;
+}
+
+void testObservers()
 {
     TimeStamp* sender = new TimeStamp();
 
@@ -23,7 +36,11 @@ int main()
     {
         sender->IncreaseTime(1);
     }
+}
 
+int main()
+{
+    
     cout << "main";
     return 0;
 }
