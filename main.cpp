@@ -3,6 +3,7 @@
 #include <vector>
 #include "Queue/Queue.hpp"
 #include "Process/Process.hpp"
+#include "Process/ProcessSchedulerLog.hpp"
 #include "TimeStamp/TimeStamp.hpp"
 #include "TimeStamp/TimeStamp_Observer.hpp"
 #include "Schedulers/FCFS.hpp"
@@ -32,13 +33,16 @@ void testFCFS()
     }
 
     TimeStamp* timer = new TimeStamp();
-    FCFS* fcfs = new FCFS(timer, queue);
+    FCFS* fcfs = new FCFS(timer, queue->Copy());
 
-    for(int i = 0; i <= 50; i++)
+    while(fcfs->IsProcessing())
         timer->IncreaseTime(1);
 
     for(int i = 0; i < process.size(); i++)
         cout << process[i]->ToString() << endl;
+
+    ProcessSchedulerLog* log = new ProcessSchedulerLog(queue->Copy());
+    cout << log->ToString() << endl;
 }
 
 void testQueueIteration()
@@ -87,8 +91,26 @@ void testObservers()
     }
 }
 
+void TestQueueCopy()
+{
+    Queue<int>* q1 = new Queue<int>();
+
+    for(int i = 0; i < 10; i++)
+        q1->Enqueue(i);
+    
+    Queue<int>* q2 = q1->Copy();
+
+    for(int i = 0; i < 10; i++)
+        q1->Dequeue();
+
+    q2->Enqueue(-55);
+    for(int i = 0; i < 11; i++)
+        cout << q2->Dequeue() << " ";
+}
+
 int main()
 {
+    //TestQueueCopy();
     testFCFS();
     //testObservers();
     return 0;

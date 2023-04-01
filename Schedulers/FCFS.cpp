@@ -1,21 +1,35 @@
 #include "FCFS.hpp"
-#include <iostream>
 
 FCFS::FCFS(TimeStamp* sender, Queue<Process*>* processQueue) : TimeStamp_Observer(sender)
 {
-    this->allProcessQueue = processQueue;
-    this->toCreateQueue = processQueue;
+    this->allProcessQueue = processQueue->Copy();
+    this->toCreateQueue = processQueue->Copy();
     this->readyQueue = new Queue<Process*>();
-    this->currentProcessing = nullptr;
+
+    SetCurrentProcess(nullptr);
+    Update(0); // first processment
 }
 
 void FCFS::Update(float delta)
 {
+    ProcessReadyQueue(delta);
     ProcessToCreateQueue(delta);
     ProcessCurrentEnabled(delta);
-    ProcessReadyQueue(delta);
+    ProcessNext();
+}
 
-    currentProcessing = GetNextToBeProcessed();
+bool FCFS::IsProcessing()
+{
+    for(int i = 0; i < allProcessQueue->Length(); i++)
+    {
+        Process* p = allProcessQueue->Dequeue();
+        allProcessQueue->Enqueue(p);
+
+        if(!p->IsFinished())
+            return true;
+    }
+
+    return false;
 }
 
 void FCFS::ProcessToCreateQueue(float delta)
@@ -26,7 +40,7 @@ void FCFS::ProcessToCreateQueue(float delta)
     {
         Process* p = toCreateQueue->Dequeue();
 
-        if(p->GetEnteringTime() < sender->GetTotalTime())
+        if(sender->GetTotalTime() >= p->GetEnteringTime())
             readyQueue->Enqueue(p);
         else
             toCreateQueue->Enqueue(p);
@@ -36,9 +50,9 @@ void FCFS::ProcessToCreateQueue(float delta)
 void FCFS::ProcessCurrentEnabled(float delta)
 {
     if(currentProcessing == nullptr)
-        currentProcessing = readyQueue->Dequeue();
+        SetCurrentProcess(readyQueue->Dequeue());
 
-    if(currentProcessing != nullptr)
+    if(currentProcessing != nullptr && !currentProcessing->IsFinished()) 
         currentProcessing->InscreaseInCPUTime(delta);
 }
 
@@ -52,13 +66,27 @@ void FCFS::ProcessReadyQueue(float delta)
     }
 }
 
-Process* FCFS::GetNextToBeProcessed()
+void FCFS::ProcessNext()
 {
-    // if should switch current process   
-    if(currentProcessing && currentProcessing->IsFinished())
+    bool shouldSwitchCurrentProcess = currentProcessing && currentProcessing->IsFinished();
+  
+    if(shouldSwitchCurrentProcess)
     {
-        return readyQueue->IsEmpty() ? nullptr : readyQueue->Dequeue();
+        float returnTime = sender->GetTotalTime() - currentProcessing->GetEnteringTime();
+        currentProcessing->SetReturnTime(returnTime);
+        SetCurrentProcess(readyQueue->IsEmpty() ? nullptr : readyQueue->Dequeue());    
     }
-        
-    return currentProcessing;
+}
+
+void FCFS::SetCurrentProcess(Process* p)
+{
+    currentProcessing = p;
+
+    if(p == nullptr)
+        return;
+
+    float curTime = sender->GetTotalTime();
+    float init = p->GetEnteringTime();
+    float answerTime = curTime - init;
+    currentProcessing->SetAnswerTime(answerTime);
 }

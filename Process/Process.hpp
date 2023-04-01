@@ -30,4 +30,12 @@ class Process
         float GetReturnTime() const;
         float GetAnswerTime() const;
         float GetWaitTime() const; 
+
+        // Setters
+        void SetEnteringTime(float enteringTime);
+        void SetDurationTime(float durationTime);
+        void SetInCPUTime(float inCPUTime);
+        void SetReturnTime(float returnTime);
+        void SetAnswerTime(float answerTime);
+        void SetWaitTime(float waitTime);
 };

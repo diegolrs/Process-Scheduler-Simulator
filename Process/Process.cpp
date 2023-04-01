@@ -37,3 +37,11 @@ float Process::GetInCPUTime() const { return inCPUTime; }
 float Process::GetReturnTime() const { return returnTime; }
 float Process::GetAnswerTime() const { return answerTime; }
 float Process::GetWaitTime() const { return waitTime; }
+
+// Setters
+void Process::SetEnteringTime(float enteringTime) { this->enteringTime = enteringTime; }
+void Process::SetDurationTime(float durationTime) { this->durationTime = durationTime; }
+void Process::SetInCPUTime(float inCPUTime) { this->inCPUTime = inCPUTime; }
+void Process::SetReturnTime(float returnTime) { this->returnTime = returnTime; }
+void Process::SetAnswerTime(float answerTime) { this->answerTime = answerTime; }
+void Process::SetWaitTime(float waitTime) { this->waitTime = waitTime; }
