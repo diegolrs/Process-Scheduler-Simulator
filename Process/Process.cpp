@@ -3,7 +3,7 @@
 Process::Process(float enteringTime, float durationTime)
 {
     this->alreadyHasBeenOnCPU = false;
-    
+
     this->enteringTime = enteringTime;
     this->durationTime = durationTime;
     
@@ -38,6 +38,7 @@ void Process::TriggerHasBeenOnCPU() { alreadyHasBeenOnCPU = true; }
 // Getters
 float Process::GetEnteringTime() const { return enteringTime; }
 float Process::GetDurationTime() const { return durationTime; }
+float Process::GetDurationLeft() const  { return (durationTime-inCPUTime) > 0 ? (durationTime-inCPUTime) : 0; }
 float Process::GetInCPUTime() const { return inCPUTime; }
 float Process::GetReturnTime() const { return returnTime; }
 float Process::GetAnswerTime() const { return answerTime; }

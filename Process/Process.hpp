@@ -30,6 +30,7 @@ class Process
         // Getters
         float GetEnteringTime() const;
         float GetDurationTime() const;
+        float GetDurationLeft() const;
         float GetInCPUTime() const;
         float GetReturnTime() const;
         float GetAnswerTime() const;

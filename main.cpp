@@ -138,11 +138,24 @@ void TestQueueCopy()
         cout << q2->Dequeue() << " ";
 }
 
+#include <algorithm>
+bool myfunction (Process* i, Process* j) { return (i->GetDurationLeft()<j->GetDurationLeft()); }
+void sortVector()
+{
+    vector<Process*> process = getProcess();
+    std::sort (process.begin(), process.begin()+4);   
+
+    for(int i = 0; i < process.size(); i++)
+        cout << process[i]->GetDurationLeft() << endl;
+}
+
 int main()
 {
     //TestQueueCopy();
     //testFCFS();
-    testRR();
+    //testRR();
     //testObservers();
+
+    sortVector();
     return 0;
 }
