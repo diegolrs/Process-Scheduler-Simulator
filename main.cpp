@@ -20,6 +20,10 @@ vector<Process*> getProcess()
     process.push_back(new Process(4, 6));
     process.push_back(new Process(4, 8));
 
+    // process.push_back(new Process(0, 24));
+    // process.push_back(new Process(0, 3));
+    // process.push_back(new Process(0, 3));
+
     return process;
 }
 
@@ -62,7 +66,6 @@ void testRR()
     while(rr->IsProcessing())
     {
         timer->IncreaseTime(1);
-        cout << "Timer now " << timer->GetTotalTime() << endl;
     }
 
     for(int i = 0; i < process.size(); i++)

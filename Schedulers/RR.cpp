@@ -18,6 +18,7 @@ RR::RR(TimeStamp* sender, Queue<Process*>* processQueue, float quantum) : TimeSt
 
 void RR::Update(float delta)
 {
+    ProcessCurrentEnabled(delta); // adicionei tempo na cpu
     curQuantum += delta;
 
     bool quantumFinished = curQuantum >= quantumMax;
@@ -25,7 +26,6 @@ void RR::Update(float delta)
 
     ProcessReadyQueue(delta); // increase na fila de espera
     ProcessToCreateQueue(delta); // coloquei na fila de prontos
-    ProcessCurrentEnabled(delta); // adicionei tempo na cpu
 
     if(quantumFinished || processFinished)
     {
