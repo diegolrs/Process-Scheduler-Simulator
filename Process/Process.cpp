@@ -2,6 +2,8 @@
 
 Process::Process(float enteringTime, float durationTime)
 {
+    this->alreadyHasBeenOnCPU = false;
+    
     this->enteringTime = enteringTime;
     this->durationTime = durationTime;
     
@@ -29,6 +31,9 @@ void Process::InscreaseReturnTime(float v) { returnTime += v; }
 void Process::InscreaseAnswerTime(float v) { answerTime += v; }
 void Process::InscreaseWaitTime(float v)  { waitTime += v; }
 void Process::InscreaseInCPUTime(float v)  {inCPUTime += v; }
+
+bool Process::HasBeenOnCPU() { return alreadyHasBeenOnCPU; }
+void Process::TriggerHasBeenOnCPU() { alreadyHasBeenOnCPU = true; }
 
 // Getters
 float Process::GetEnteringTime() const { return enteringTime; }

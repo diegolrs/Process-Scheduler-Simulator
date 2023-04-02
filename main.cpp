@@ -7,6 +7,7 @@
 #include "TimeStamp/TimeStamp.hpp"
 #include "TimeStamp/TimeStamp_Observer.hpp"
 #include "Schedulers/FCFS.hpp"
+#include "Schedulers/RR.hpp"
 
 using namespace std;
 
@@ -37,6 +38,32 @@ void testFCFS()
 
     while(fcfs->IsProcessing())
         timer->IncreaseTime(1);
+
+    for(int i = 0; i < process.size(); i++)
+        cout << process[i]->ToString() << endl;
+
+    ProcessSchedulerLog* log = new ProcessSchedulerLog(queue->Copy());
+    cout << log->ToString() << endl;
+}
+
+void testRR()
+{
+    vector<Process*> process = getProcess();
+    Queue<Process*>* queue = new Queue<Process*>();
+
+    for(int i = 0; i < process.size(); i++)
+    {
+        queue->Enqueue(process[i]);
+    }
+
+    TimeStamp* timer = new TimeStamp();
+    RR* rr = new RR(timer, queue->Copy());
+
+    while(rr->IsProcessing())
+    {
+        timer->IncreaseTime(1);
+        cout << "Timer now " << timer->GetTotalTime() << endl;
+    }
 
     for(int i = 0; i < process.size(); i++)
         cout << process[i]->ToString() << endl;
@@ -111,7 +138,8 @@ void TestQueueCopy()
 int main()
 {
     //TestQueueCopy();
-    testFCFS();
+    //testFCFS();
+    testRR();
     //testObservers();
     return 0;
 }
