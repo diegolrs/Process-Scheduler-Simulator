@@ -8,6 +8,7 @@
 #include "TimeStamp/TimeStamp_Observer.hpp"
 #include "Schedulers/FCFS.hpp"
 #include "Schedulers/RR.hpp"
+#include "Schedulers/SJF.hpp"
 
 using namespace std;
 
@@ -19,10 +20,6 @@ vector<Process*> getProcess()
     process.push_back(new Process(0, 10));
     process.push_back(new Process(4, 6));
     process.push_back(new Process(4, 8));
-
-    // process.push_back(new Process(0, 24));
-    // process.push_back(new Process(0, 3));
-    // process.push_back(new Process(0, 3));
 
     return process;
 }
@@ -64,6 +61,31 @@ void testRR()
     RR* rr = new RR(timer, queue->Copy());
 
     while(rr->IsProcessing())
+    {
+        timer->IncreaseTime(1);
+    }
+
+    for(int i = 0; i < process.size(); i++)
+        cout << process[i]->ToString() << endl;
+
+    ProcessSchedulerLog* log = new ProcessSchedulerLog(queue->Copy());
+    cout << log->ToString() << endl;
+}
+
+void testSJF()
+{
+    vector<Process*> process = getProcess();
+    Queue<Process*>* queue = new Queue<Process*>();
+
+    for(int i = 0; i < process.size(); i++)
+    {
+        queue->Enqueue(process[i]);
+    }
+
+    TimeStamp* timer = new TimeStamp();
+    SJF* sjf = new SJF(timer, queue->Copy());
+
+    while(sjf->IsProcessing())
     {
         timer->IncreaseTime(1);
     }
@@ -201,9 +223,10 @@ int main()
     //TestQueueCopy();
     //testFCFS();
     //testRR();
+    testSJF();
     //testObservers();
 
     //sortVector();
-    TestQueueSort();
+    //TestQueueSort();
     return 0;
 }

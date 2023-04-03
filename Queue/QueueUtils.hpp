@@ -36,7 +36,7 @@ namespace QueueUtils
     template <typename T>
     Queue<T>* sort_queue(Queue<T>* queue, bool(*sortingFunction)(T, T))
     {
-        vector<T> _vector = QueueUtils::to_std_vector(queue);
+        std::vector<T> _vector = QueueUtils::to_std_vector(queue);
         std::sort(_vector.begin(), _vector.end(), sortingFunction);   
         return QueueUtils::from_std_vector(_vector);
     }
