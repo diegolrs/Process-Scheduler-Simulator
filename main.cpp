@@ -159,7 +159,8 @@ void TestQueueSort()
     queue->Enqueue(new Process(0, 15));
     queue->Enqueue(new Process(0, 25));
     queue->Enqueue(new Process(0, 47));
-    queue = sortQueue(queue, myfunction);
+
+    queue = QueueUtils::sort_queue(queue, myfunction);// sortQueue(queue, myfunction);
 
     Process* p = queue->Dequeue();
     while(p != nullptr)

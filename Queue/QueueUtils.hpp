@@ -1,5 +1,7 @@
 #pragma once
 #include <vector>
+#include <algorithm>
+#include <functional>
 #include "../Queue/Queue.hpp"
 
 namespace QueueUtils
@@ -30,5 +32,30 @@ namespace QueueUtils
         }
 
         return queue;
+    }
+
+    // template <typename T, typename Func>
+    // Queue<T>* sort_queue(Queue<T>* queue, Func sortingFunction)
+    // {
+    //     vector<T> _vector = QueueUtils::to_std_vector(queue);
+    //     std::sort(_vector.begin(), _vector.end(), sortingFunction);   
+    //     return QueueUtils::from_std_vector(_vector);
+    // }
+
+    template <typename T>
+    Queue<T>* sort_queue(Queue<T>* queue,  bool(*function)(T, T))
+    {
+        vector<T> _vector = QueueUtils::to_std_vector(queue);
+        std::sort(_vector.begin(), _vector.end(), function);   
+        return QueueUtils::from_std_vector(_vector);
+    }
+   
+
+    template <typename T>
+    Queue<T>* sort_queue(Queue<T>* queue, std::function<bool(T, T)> sortingFunction)
+    {
+        vector<T> _vector = QueueUtils::to_std_vector(queue);
+        std::sort(_vector.begin(), _vector.end(), sortingFunction);   
+        return QueueUtils::from_std_vector(_vector);
     }
 }
