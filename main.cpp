@@ -139,14 +139,69 @@ void TestQueueCopy()
 }
 
 #include <algorithm>
+#include <functional>
+#include "Queue/QueueUtils.hpp"
 bool myfunction (Process* i, Process* j) { return (i->GetDurationLeft()<j->GetDurationLeft()); }
+
+Queue<Process*>* sortQueue(Queue<Process*>* queue, function<bool(Process*, Process*)> func)
+{
+    vector<Process*> _vector = QueueUtils::to_std_vector(queue);
+    std::sort(_vector.begin(), _vector.end(), func);   
+    return QueueUtils::from_std_vector(_vector);
+}
+
+void TestQueueSort()
+{
+    Queue<Process*>* queue = new Queue<Process*>();
+    queue->Enqueue(new Process(0, 1));
+    queue->Enqueue(new Process(0, 11));
+    queue->Enqueue(new Process(0, 3));
+    queue->Enqueue(new Process(0, 15));
+    queue->Enqueue(new Process(0, 25));
+    queue->Enqueue(new Process(0, 47));
+    queue = sortQueue(queue, myfunction);
+
+    Process* p = queue->Dequeue();
+    while(p != nullptr)
+    {
+        cout << "Valor: " << p->GetDurationLeft() << endl;
+        p = queue->Dequeue();
+    }
+}
+
 void sortVector()
 {
-    vector<Process*> process = getProcess();
-    std::sort (process.begin(), process.begin()+4);   
+    Queue<Process*>* queue = new Queue<Process*>();
+    queue->Enqueue(new Process(0, 1));
+    queue->Enqueue(new Process(0, 11));
+    queue->Enqueue(new Process(0, 3));
+    queue->Enqueue(new Process(0, 15));
+    queue->Enqueue(new Process(0, 25));
+    queue->Enqueue(new Process(0, 47));
+
+    vector<Process*> process = QueueUtils::to_std_vector(queue); //getProcess();
 
     for(int i = 0; i < process.size(); i++)
-        cout << process[i]->GetDurationLeft() << endl;
+        cout << process[i]->GetDurationLeft() <<" ";
+    cout << endl;
+
+    std::sort(process.begin(), process.end(), myfunction);   
+
+    for(int i = 0; i < process.size(); i++)
+        cout << process[i]->GetDurationLeft() <<" ";
+    cout << endl;
+
+    for(int i = 0; i < process.size(); i++)
+        cout << process[i]->GetDurationLeft() <<  " ";
+    cout << endl;
+    cout << queue->Length() << " " << process.size() << "\n";
+
+    queue = QueueUtils::from_std_vector(process);
+
+    cout << queue->Length() << " " << process.size() << "\n";
+
+    // for(int i = 0; i < queue->Length(); i++)
+    //     cout << queue->Dequeue()->GetDurationLeft() << endl;
 }
 
 int main()
@@ -156,6 +211,7 @@ int main()
     //testRR();
     //testObservers();
 
-    sortVector();
+    //sortVector();
+    TestQueueSort();
     return 0;
 }
