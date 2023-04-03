@@ -138,17 +138,8 @@ void TestQueueCopy()
         cout << q2->Dequeue() << " ";
 }
 
-#include <algorithm>
-#include <functional>
 #include "Queue/QueueUtils.hpp"
 bool myfunction (Process* i, Process* j) { return (i->GetDurationLeft()<j->GetDurationLeft()); }
-
-Queue<Process*>* sortQueue(Queue<Process*>* queue, function<bool(Process*, Process*)> func)
-{
-    vector<Process*> _vector = QueueUtils::to_std_vector(queue);
-    std::sort(_vector.begin(), _vector.end(), func);   
-    return QueueUtils::from_std_vector(_vector);
-}
 
 void TestQueueSort()
 {
@@ -156,11 +147,11 @@ void TestQueueSort()
     queue->Enqueue(new Process(0, 1));
     queue->Enqueue(new Process(0, 11));
     queue->Enqueue(new Process(0, 3));
-    queue->Enqueue(new Process(0, 15));
+    queue->Enqueue(new Process(0, 125));
     queue->Enqueue(new Process(0, 25));
     queue->Enqueue(new Process(0, 47));
 
-    queue = QueueUtils::sort_queue(queue, myfunction);// sortQueue(queue, myfunction);
+    queue = QueueUtils::sort_queue(queue, myfunction);
 
     Process* p = queue->Dequeue();
     while(p != nullptr)
