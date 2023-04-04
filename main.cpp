@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+
 #include "Queue/Queue.hpp"
 #include "Process/Process.hpp"
 #include "Process/ProcessSchedulerLog.hpp"
@@ -9,32 +10,19 @@
 #include "Schedulers/FCFS.hpp"
 #include "Schedulers/RR.hpp"
 #include "Schedulers/SJF.hpp"
+#include "Process/Process_FileReader.hpp"
 
-#include <locale>
 
 using namespace std;
 
-vector<Process*> getProcess()
+vector<Process*> readDataFromFile()
 {
-    vector<Process*> process;
-
-    process.push_back(new Process(0, 20));
-    process.push_back(new Process(0, 10));
-    process.push_back(new Process(4, 6));
-    process.push_back(new Process(4, 8));
-
-    return process;
+    return Process_FileReader::ReadFile("input.txt");
 }
 
-void testFCFS()
+void testFCFS(std::vector<Process*> allProcesses)
 {
-    vector<Process*> process = getProcess();
-    Queue<Process*>* queue = new Queue<Process*>();
-
-    for(int i = 0; i < process.size(); i++)
-    {
-        queue->Enqueue(process[i]);
-    }
+    Queue<Process*>* queue = QueueUtils::from_std_vector(allProcesses);
 
     TimeStamp* timer = new TimeStamp();
     FCFS* fcfs = new FCFS(timer, queue->Copy());
@@ -42,43 +30,28 @@ void testFCFS()
     while(fcfs->IsProcessing())
         timer->IncreaseTime(1);
 
-    // for(int i = 0; i < process.size(); i++)
-    //     cout << process[i]->ToString() << endl;
-
     ProcessSchedulerLog* log = new ProcessSchedulerLog(queue->Copy());
     cout << "FCFS " << log->ToString() << endl;
 }
 
-void testSJF()
+void testSJF(std::vector<Process*> allProcesses)
 {
-    vector<Process*> process = getProcess();
-    Queue<Process*>* queue = new Queue<Process*>();
-
-    for(int i = 0; i < process.size(); i++)
-    {
-        queue->Enqueue(process[i]);
-    }
+    Queue<Process*>* queue = QueueUtils::from_std_vector(allProcesses);
 
     TimeStamp* timer = new TimeStamp();
     SJF* sjf = new SJF(timer, queue->Copy());
-
     while(sjf->IsProcessing())
     {
         timer->IncreaseTime(1);
     }
 
-    // for(int i = 0; i < process.size(); i++)
-    //     cout << process[i]->ToString() << endl;
-
     ProcessSchedulerLog* log = new ProcessSchedulerLog(queue->Copy());
     cout << "SJF " << log->ToString() << endl;
 }
 
-void testRR()
+void testRR(std::vector<Process*>  allProcesses)
 {
-    vector<Process*> allProcesses = getProcess();
     Queue<Process*>* queue = QueueUtils::from_std_vector(allProcesses);
-
     TimeStamp* timer = new TimeStamp();
     RR* rr = new RR(timer, queue->Copy());
 
@@ -91,26 +64,54 @@ void testRR()
     cout << "RR " << log->ToString() << endl;
 }
 
-#include "Process/Process_FileReader.hpp"
-using namespace Process_FileReader;
-void testFile()
+std::vector<Process*> clone_vector_and_items(std::vector<Process*> original)
 {
-    std::vector<Process*> input = Process_FileReader::ReadFile("input.txt");
+    std::vector<Process*> clone;
 
-    for(int i = 0; i < input.size(); i++)
+    for(int i = 0; i < original.size(); i++)
     {
-        cout << input[i]->ToString() << endl;
+        Process* _ = new Process();
+        _->SetEnteringTime(original[i]->GetEnteringTime());
+        _->SetDurationTime(original[i]->GetDurationTime());
+        clone.push_back(_);
     }
 
+    return clone;
 }
+
+// TODO: Fix this function
+void process(std::vector<Process*> allProcesses)
+{
+    std::vector<Process*> list = clone_vector_and_items(allProcesses);
+    Queue<Process*>* queue = QueueUtils::from_std_vector(allProcesses);
+    
+    TimeStamp* timer = new TimeStamp();
+    FCFS* fcfs = new FCFS(timer, queue->Copy());
+    SJF* sjf = new SJF(timer, queue->Copy());
+    RR* rr = new RR(timer, queue->Copy());
+
+    while(fcfs->IsProcessing() || sjf->IsProcessing() || rr->IsProcessing())
+    {
+        timer->IncreaseTime(1);
+    }
+
+    ProcessSchedulerLog* FCFSlog = new ProcessSchedulerLog(queue->Copy());
+    ProcessSchedulerLog* SJFlog = new ProcessSchedulerLog(queue->Copy());
+    ProcessSchedulerLog* RRlog = new ProcessSchedulerLog(queue->Copy());
+
+    cout << "FCFS " << FCFSlog->ToString() << endl;
+    cout << "SJF " << SJFlog->ToString() << endl;
+    cout << "RR " << RRlog->ToString() << endl;
+}
+
 
 int main()
 {
-    // testFCFS();
-    // testSJF();
-    // testRR();
+    vector<Process*> allProcesses = readDataFromFile();
 
-    testFile();
+    testFCFS(clone_vector_and_items(allProcesses));
+    testSJF(clone_vector_and_items(allProcesses));
+    testRR(clone_vector_and_items(allProcesses));
     
     return 0;
 }

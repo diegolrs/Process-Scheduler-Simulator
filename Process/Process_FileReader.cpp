@@ -21,10 +21,6 @@ std::vector<Process*> Process_FileReader::ReadFile(std::string address)
         {
             p->SetEnteringTime(std::stof(_lineArguments[0]));
             p->SetDurationTime(std::stof(_lineArguments[1]));
-            //std::cout << "LIDO: " <<_lineArguments[0] << " " << _lineArguments[1]<< std::endl;
-            //std::cout << _lineArguments[1] << " " << std::stof(_lineArguments[1]) << std::endl;
-
-            std::cout << p->GetDurationTime() << std::endl;
         } 
         else
         {
