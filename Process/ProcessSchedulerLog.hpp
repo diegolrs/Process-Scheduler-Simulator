@@ -9,7 +9,7 @@ struct ProcessSchedulerLog
     public:
         ProcessSchedulerLog(Queue<Process*>* processQueue);
         void CalculateLog(Queue<Process*>* processQueue);
-        std::string ToString();
+        std::string ToString(int precision=1, bool useComma=true);
 
     private:
         float returnTimeAverage;

@@ -1,4 +1,6 @@
 #include "ProcessSchedulerLog.hpp"
+#include <iomanip>
+#include <algorithm>
 
 ProcessSchedulerLog::ProcessSchedulerLog(Queue<Process*>* processQueue)
 {
@@ -27,13 +29,19 @@ void ProcessSchedulerLog::CalculateLog(Queue<Process*>* processQueue)
     waitTimeAverage *= averageMultiplier;
 }
 
-std::string ProcessSchedulerLog::ToString()
+std::string ProcessSchedulerLog::ToString(int precision, bool useComma)
 {
     std::ostringstream ss;
-    ss << returnTimeAverage << " ";
-    ss << answerTimeAverage << " ";
-    ss << waitTimeAverage;
-    return ss.str();
+    ss << std::fixed << std::setprecision(precision) << returnTimeAverage << " ";
+    ss << std::fixed << std::setprecision(precision) << answerTimeAverage << " ";
+    ss << std::fixed << std::setprecision(precision) << waitTimeAverage;
+
+    std::string _out = ss.str();
+
+    if(useComma)
+        std::replace(_out.begin(), _out.end(), '.', ',');
+
+    return _out;
 }
 
 void ProcessSchedulerLog::ResetValues()
