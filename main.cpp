@@ -91,11 +91,26 @@ void testRR()
     cout << "RR " << log->ToString() << endl;
 }
 
+#include "Process/Process_FileReader.hpp"
+using namespace Process_FileReader;
+void testFile()
+{
+    std::vector<Process*> input = Process_FileReader::ReadFile("input.txt");
+
+    for(int i = 0; i < input.size(); i++)
+    {
+        cout << input[i]->ToString() << endl;
+    }
+
+}
+
 int main()
 {
-    testFCFS();
-    testSJF();
-    testRR();
+    // testFCFS();
+    // testSJF();
+    // testRR();
+
+    testFile();
     
     return 0;
 }

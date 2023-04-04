@@ -19,6 +19,8 @@ std::string Process::ToString()
 {
     std::string msg = "";
 
+    msg += "[EnterTime]: " + std::to_string(enteringTime) + "\n";
+    msg += "[DurationTime]: " + std::to_string(durationTime) + "\n";
     msg += "[ReturnTime]: " + std::to_string(returnTime) + "\n";
     msg += "[AnswerTim]: " + std::to_string(answerTime) + "\n";
     msg += "[WaitTime]: " + std::to_string(waitTime) + "\n";
