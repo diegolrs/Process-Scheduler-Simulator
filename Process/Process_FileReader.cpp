@@ -1,5 +1,4 @@
 #include "Process_FileReader.hpp"
-#include <iostream>
 
 std::vector<Process*> Process_FileReader::ReadFile(std::string address)
 {
@@ -12,6 +11,7 @@ std::vector<Process*> Process_FileReader::ReadFile(std::string address)
     }  
 
     std::vector<Process*> allProcesses;
+    int lineCounter = 1;
     while (getline(myFile, myText)) 
     {
         std::vector<std::string> _lineArguments = StringExtensions::Split(myText, DELIMETER);
@@ -25,10 +25,15 @@ std::vector<Process*> Process_FileReader::ReadFile(std::string address)
         else
         {
             myFile.close();
-            throw std::invalid_argument("AddPositiveIntegers arguments must be positive");
+            
+            std::string msg = "Input format is invalid at line " 
+                               + std::to_string(lineCounter) 
+                               + " of file at " + address;
+            throw std::invalid_argument(msg);
         }
 
         allProcesses.push_back(p);
+        lineCounter++;
     }
 
     myFile.close();
